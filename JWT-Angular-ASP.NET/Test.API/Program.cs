@@ -48,6 +48,8 @@ builder.Services.AddScoped<ITokenCleanupService, TokenCleanupService>();
 // Background service for token cleanup
 builder.Services.AddHostedService<TokenCleanupBackgroundService>();
 
+
+builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
