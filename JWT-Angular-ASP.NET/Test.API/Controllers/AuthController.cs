@@ -21,35 +21,35 @@ namespace Test.API.Controllers
         public async Task<IActionResult> SignUp([FromBody] UserMap userMap)
         {
             var result = await _authServices.SignUp(userMap);
-            return StatusCode(result.statuscodes, result);
+            return Ok(result);
         }
 
         [HttpPost("signin")]
         public async Task<IActionResult> SignIn([FromBody] LoginRequest request)
         {
             var result = await _authServices.SignIn(request.Username, request.Password);
-            return StatusCode(result.statuscodes, result);
+            return Ok(result);
         }
 
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
         {
             var result = await _authServices.RefreshToken(request.RefreshToken);
-            return StatusCode(result.statuscodes, result);
+            return Ok(result);
         }
 
         [HttpPost("revoke-token")]
         public async Task<IActionResult> RevokeToken([FromBody] RefreshTokenRequest request)
         {
             var result = await _authServices.RevokeToken(request.RefreshToken);
-            return StatusCode(result.statuscodes, result);
+            return Ok(result);
         }
 
         [HttpPost("logout")]
         public async Task<IActionResult> Logout([FromBody] LogoutRequest request)
         {
             var result = await _authServices.Logout(request.UserId);
-            return StatusCode(result.statuscodes, result);
+            return Ok(result);
         }
     }
     public class LoginRequest
