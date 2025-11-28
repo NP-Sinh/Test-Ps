@@ -1,0 +1,63 @@
+<div class="user-management-container">
+  <div class="management-header">
+    <h2>Quản Lý Người Dùng</h2>
+    <p>Danh sách tất cả người dùng trong hệ thống</p>
+  </div>
+
+  <div *ngIf="!isAdmin()" class="alert alert-error">
+    Bạn không có quyền truy cập trang này
+  </div>
+
+  <div *ngIf="isAdmin()">
+    <div *ngIf="isLoading" class="loading">Đang tải danh sách người dùng...</div>
+
+    <div *ngIf="errorMessage" class="alert alert-error">
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="users.length > 0 && !isLoading" class="users-table">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Tên đăng nhập</th>
+            <th>Email</th>
+            <th>Họ tên</th>
+            <th>Vai trò</th>
+            <th>Trạng thái</th>
+            <th>Ngày tạo</th>
+            <th>Token đang hoạt động</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.fullName }}</td>
+            <td>
+              <span class="role-badge" [class.admin]="user.role === 'Admin'">
+                {{ user.role }}
+              </span>
+            </td>
+            <td>
+              <span [class]="user.isActive ? 'status-active' : 'status-inactive'">
+                {{ user.isActive ? 'Hoạt động' : 'Khóa' }}
+              </span>
+            </td>
+            <td>{{ user.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>
+              <span class="token-count" [class.has-tokens]="user.refreshTokensCount > 0">
+                {{ user.refreshTokensCount }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="users.length === 0 && !isLoading && !errorMessage" class="no-data">
+      Không có người dùng nào
+    </div>
+  </div>
+</div>

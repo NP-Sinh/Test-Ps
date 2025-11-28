@@ -1,0 +1,45 @@
+<div class="profile-container">
+  <div class="profile-card">
+    <h2>Thông Tin Cá Nhân</h2>
+
+    <div *ngIf="isLoading" class="loading">Đang tải thông tin...</div>
+
+    <div *ngIf="errorMessage" class="alert alert-error">
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="userProfile && !isLoading" class="profile-info">
+      <div class="info-item">
+        <strong>ID:</strong> {{ userProfile.id }}
+      </div>
+      <div class="info-item">
+        <strong>Tên đăng nhập:</strong> {{ userProfile.username }}
+      </div>
+      <div class="info-item">
+        <strong>Email:</strong> {{ userProfile.email }}
+      </div>
+      <div class="info-item">
+        <strong>Họ tên:</strong> {{ userProfile.fullName }}
+      </div>
+      <div class="info-item">
+        <strong>Vai trò:</strong>
+        <span class="role-badge" [class.admin]="userProfile.role === 'Admin'">
+          {{ userProfile.role }}
+        </span>
+      </div>
+      <div class="info-item">
+        <strong>Trạng thái:</strong>
+        <span [class]="userProfile.isActive ? 'status-active' : 'status-inactive'">
+          {{ userProfile.isActive ? 'Đang hoạt động' : 'Đã khóa' }}
+        </span>
+      </div>
+      <div class="info-item">
+        <strong>Ngày tạo:</strong> {{ userProfile.createdAt | date:'dd/MM/yyyy HH:mm' }}
+      </div>
+    </div>
+
+    <div *ngIf="!userProfile && !isLoading && !errorMessage" class="no-data">
+      Không có thông tin người dùng
+    </div>
+  </div>
+</div>

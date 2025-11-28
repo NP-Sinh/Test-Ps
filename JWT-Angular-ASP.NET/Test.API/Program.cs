@@ -33,7 +33,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             OnMessageReceived = context =>
             {
-                // Đọc token từ cookie thay vì header
+                // Đọc token từ cookie
                 context.Token = context.Request.Cookies["accessToken"];
                 return Task.CompletedTask;
             }

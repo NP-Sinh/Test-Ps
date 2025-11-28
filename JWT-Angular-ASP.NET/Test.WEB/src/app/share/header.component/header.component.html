@@ -1,0 +1,32 @@
+<header class="main-header">
+  <div class="logo">
+    <a [routerLink]="['/']">Test</a>
+  </div>
+
+  <nav class="main-nav" *ngIf="currentUser">
+    <ul>
+      <li>
+        <a [routerLink]="['/profile']" routerLinkActive="active">
+          Profile
+        </a>
+      </li>
+      <li class="management-dropdown" *ngIf="isAdmin()">
+        <a (click)="toggleManagementDropdown()" class="dropdown-toggle">
+          Quản lý
+        </a>
+        <ul class="dropdown-menu" *ngIf="isManagementDropdownOpen">
+          <li><a [routerLink]="['/admin/users']">Quản lý người dùng</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="user-actions" *ngIf="currentUser; else loginLink">
+    <span class="welcome-text">Xin chào, {{ currentUser.fullName }}</span>
+    <button (click)="logout()" class="logout-btn">Đăng xuất</button>
+  </div>
+
+  <ng-template #loginLink>
+    <a [routerLink]="['/login']" class="login-link">Đăng nhập</a>
+  </ng-template>
+</header>
