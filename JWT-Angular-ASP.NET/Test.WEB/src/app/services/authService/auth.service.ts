@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, of, tap, throwError } from 'rxjs';
 export interface User {
   id: number;
   username: string;
@@ -28,6 +28,7 @@ export class AuthService {
   private apiUrl = `${environment.apiUrl}/Auth`;
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
+   private refreshInProgress = false;
 
   constructor(private http: HttpClient) {
     // Kiểm tra nếu đã có thông tin user trong localStorage
@@ -68,10 +69,24 @@ export class AuthService {
     );
   }
 
-  refreshToken(): Observable<ApiResponse> {
+ refreshToken(): Observable<ApiResponse> {
+    // Nếu đang refresh, không gọi lại
+    if (this.refreshInProgress) {
+      return of({ statuscodes: 200, message: 'Refreshing' });
+    }
+
+    this.refreshInProgress = true;
     return this.http.post<ApiResponse>(`${this.apiUrl}/refresh-token`, {}, {
       withCredentials: true
-    });
+    }).pipe(
+      tap(() => {
+        this.refreshInProgress = false;
+      }),
+      catchError((error) => {
+        this.refreshInProgress = false;
+        return throwError(() => error);
+      })
+    );
   }
 
   getCurrentUser(): User | null {
