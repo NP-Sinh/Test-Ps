@@ -27,44 +27,35 @@ namespace Test.API.Controllers
         [HttpPost("signin")]
         public async Task<IActionResult> SignIn([FromBody] LoginRequest request)
         {
-            var result = await _authServices.SignIn(request.Username, request.Password);
+            var result = await _authServices.SignIn(request.Username, request.Password, HttpContext);
             return Ok(result);
         }
 
         [HttpPost("refresh-token")]
-        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
+        public async Task<IActionResult> RefreshToken()
         {
-            var result = await _authServices.RefreshToken(request.RefreshToken);
+            var result = await _authServices.RefreshToken(HttpContext);
             return Ok(result);
         }
 
         [HttpPost("revoke-token")]
-        public async Task<IActionResult> RevokeToken([FromBody] RefreshTokenRequest request)
+        public async Task<IActionResult> RevokeToken()
         {
-            var result = await _authServices.RevokeToken(request.RefreshToken);
+            var result = await _authServices.RevokeToken(HttpContext);
             return Ok(result);
         }
 
         [HttpPost("logout")]
-        public async Task<IActionResult> Logout([FromBody] LogoutRequest request)
+        public async Task<IActionResult> Logout()
         {
-            var result = await _authServices.Logout(request.UserId);
+            var result = await _authServices.Logout(HttpContext);
             return Ok(result);
         }
     }
+
     public class LoginRequest
     {
         public string Username { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
-    }
-
-    public class RefreshTokenRequest
-    {
-        public string RefreshToken { get; set; } = string.Empty;
-    }
-
-    public class LogoutRequest
-    {
-        public int UserId { get; set; }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Azure.Core;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Test.API.Models.Entities;
 using Test.API.Models.Map;
@@ -8,10 +10,10 @@ namespace Test.API.Services.AuthServices
     public interface IAuthServices
     {
         Task<dynamic> SignUp(UserMap userMap);
-        Task<dynamic> SignIn(string userName, string password);
-        Task<dynamic> RefreshToken(string refreshToken);
-        Task<dynamic> RevokeToken(string refreshToken);
-        Task<dynamic> Logout(int userId);
+        Task<dynamic> SignIn(string userName, string password, HttpContext httpContext);
+        Task<dynamic> RefreshToken(HttpContext httpContext);
+        Task<dynamic> RevokeToken(HttpContext httpContext);
+        Task<dynamic> Logout(HttpContext httpContext);
     }
 
     public class AuthServices : IAuthServices
@@ -52,10 +54,16 @@ namespace Test.API.Services.AuthServices
             }
             catch (Exception ex)
             {
-                return new { statuscodes = 500, message = $"Lỗi: {ex.Message}" };
+                return new
+                {
+                    statuscodes = 500,
+                    message = "Thất bại",
+                    Inner = ex.InnerException?.Message
+                };
             }
         }
-        public async Task<dynamic> SignIn(string userName, string password)
+
+        public async Task<dynamic> SignIn(string userName, string password, HttpContext httpContext)
         {
             try
             {
@@ -95,6 +103,26 @@ namespace Test.API.Services.AuthServices
                 _context.RefreshTokens.Add(refreshTokenEntity);
                 await _context.SaveChangesAsync();
 
+                // Set JWT token in HttpOnly cookie
+                var cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true, // Use true in production with HTTPS
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:AccessTokenDuration"]))
+                };
+                httpContext.Response.Cookies.Append("accessToken", jwtToken, cookieOptions);
+
+                // Set refresh token in HttpOnly cookie
+                var refreshCookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["Jwt:RefreshTokenDuration"]))
+                };
+                httpContext.Response.Cookies.Append("refreshToken", refreshToken, refreshCookieOptions);
+
                 return new
                 {
                     statuscodes = 200,
@@ -106,26 +134,35 @@ namespace Test.API.Services.AuthServices
                         user.Email,
                         user.FullName,
                         user.Role,
-                        AccessToken = jwtToken,
-                        RefreshToken = refreshToken,
-                        ExpiresIn = DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:AccessTokenDuration"]))
                     }
                 };
             }
             catch (Exception ex)
             {
-                return new { statuscodes = 500, message = $"Lỗi: {ex.Message}" };
+                return new
+                {
+                    statuscodes = 500,
+                    message = "Thất bại",
+                    Inner = ex.InnerException?.Message
+                };
             }
         }
-        public async Task<dynamic> RefreshToken(string refreshToken)
+
+        public async Task<dynamic> RefreshToken(HttpContext httpContext)
         {
             try
             {
+                // Lấy refresh token từ cookie
+                var refreshToken = httpContext.Request.Cookies["refreshToken"];
+
+                if (string.IsNullOrEmpty(refreshToken))
+                    return new { statuscodes = 401, message = "Refresh token không tồn tại" };
+
                 var tokenEntity = await _context.RefreshTokens
                     .Include(rt => rt.User)
                     .FirstOrDefaultAsync(rt => rt.Token == refreshToken && !rt.IsRevoked);
 
-                if (tokenEntity == null || tokenEntity.Expires < DateTime.UtcNow)
+                if (tokenEntity == null || tokenEntity.Expires < DateTime.Now)
                     return new { statuscodes = 401, message = "Refresh token không hợp lệ hoặc đã hết hạn" };
 
                 if (!tokenEntity.User.IsActive)
@@ -151,28 +188,52 @@ namespace Test.API.Services.AuthServices
                 _context.RefreshTokens.Add(newRefreshTokenEntity);
                 await _context.SaveChangesAsync();
 
+                // Set new JWT token in HttpOnly cookie
+                var cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:AccessTokenDuration"]))
+                };
+                httpContext.Response.Cookies.Append("accessToken", newJwtToken, cookieOptions);
+
+                // Set new refresh token in HttpOnly cookie
+                var refreshCookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["Jwt:RefreshTokenDuration"]))
+                };
+                httpContext.Response.Cookies.Append("refreshToken", newRefreshToken, refreshCookieOptions);
+
                 return new
                 {
                     statuscodes = 200,
-                    message = "Làm mới token thành công",
-                    data = new
-                    {
-                        AccessToken = newJwtToken,
-                        RefreshToken = newRefreshToken,
-                        ExpiresIn = DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:AccessTokenDuration"]))
-                    }
+                    message = "Làm mới token thành công"
                 };
             }
             catch (Exception ex)
             {
-                return new { statuscodes = 500, message = $"Lỗi: {ex.Message}" };
+                return new
+                {
+                    statuscodes = 500,
+                    message = "Thất bại",
+                    Inner = ex.InnerException?.Message
+                };
             }
         }
 
-        public async Task<dynamic> RevokeToken(string refreshToken)
+        public async Task<dynamic> RevokeToken(HttpContext httpContext)
         {
             try
             {
+                var refreshToken = httpContext.Request.Cookies["refreshToken"];
+
+                if (string.IsNullOrEmpty(refreshToken))
+                    return new { statuscodes = 404, message = "Token không tồn tại" };
+
                 var tokenEntity = await _context.RefreshTokens
                     .FirstOrDefaultAsync(rt => rt.Token == refreshToken && !rt.IsRevoked);
 
@@ -183,31 +244,56 @@ namespace Test.API.Services.AuthServices
                 _context.RefreshTokens.Remove(tokenEntity);
                 await _context.SaveChangesAsync();
 
+                // Xóa cookies
+                httpContext.Response.Cookies.Delete("accessToken");
+                httpContext.Response.Cookies.Delete("refreshToken");
+
                 return new { statuscodes = 200, message = "Thu hồi token thành công" };
             }
             catch (Exception ex)
             {
-                return new { statuscodes = 500, message = $"Lỗi: {ex.Message}" };
+                return new
+                {
+                    statuscodes = 500,
+                    message = "Thất bại",
+                    Inner = ex.InnerException?.Message
+                };
             }
         }
 
-        public async Task<dynamic> Logout(int userId)
+        public async Task<dynamic> Logout(HttpContext httpContext)
         {
             try
             {
-                // XÓA tất cả refresh tokens của user
-                var userTokens = await _context.RefreshTokens
-                    .Where(rt => rt.UserId == userId)
-                    .ToListAsync();
+                // Lấy refresh token từ cookie để xóa từ database
+                var refreshToken = httpContext.Request.Cookies["refreshToken"];
 
-                _context.RefreshTokens.RemoveRange(userTokens);
-                await _context.SaveChangesAsync();
+                if (!string.IsNullOrEmpty(refreshToken))
+                {
+                    var tokenEntity = await _context.RefreshTokens
+                        .FirstOrDefaultAsync(rt => rt.Token == refreshToken);
+
+                    if (tokenEntity != null)
+                    {
+                        _context.RefreshTokens.Remove(tokenEntity);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
+                // Xóa cookies
+                httpContext.Response.Cookies.Delete("accessToken");
+                httpContext.Response.Cookies.Delete("refreshToken");
 
                 return new { statuscodes = 200, message = "Đăng xuất thành công" };
             }
             catch (Exception ex)
             {
-                return new { statuscodes = 500, message = $"Lỗi: {ex.Message}" };
+                return new
+                {
+                    statuscodes = 500,
+                    message = "Thất bại",
+                    Inner = ex.InnerException?.Message
+                };
             }
         }
     }

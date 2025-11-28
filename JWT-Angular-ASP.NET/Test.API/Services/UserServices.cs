@@ -41,17 +41,18 @@ namespace Test.API.Services
             }
             catch (Exception ex)
             {
-                return new { statuscodes = 500, message = $"Lỗi: {ex.Message}" };
+                return new
+                {
+                    statuscodes = 500,
+                    message = "Thất bại",
+                    Inner = ex.InnerException?.Message
+                };
             }
         }
         public async Task<dynamic> GetAllUsers(int userId)
         {
             try
             {
-                var currentUser = await _context.Users.FindAsync(userId);
-                if (currentUser?.Role != "Admin")
-                    return new { statuscodes = 403, message = "Không có quyền truy cập" };
-
                 var users = await _context.Users
                     .Where(u => u.Id != userId)
                     .Select(u => new
@@ -72,7 +73,12 @@ namespace Test.API.Services
             }
             catch (Exception ex)
             {
-                return new { statuscodes = 500, message = $"Lỗi: {ex.Message}" };
+                return new 
+                { 
+                    statuscodes = 500, 
+                    message = "Thất bại", 
+                    Inner = ex.InnerException?.Message 
+                };
             }
         }
     }
