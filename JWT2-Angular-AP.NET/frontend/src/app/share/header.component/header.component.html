@@ -226,6 +226,53 @@
       </ul>
     </div>
 
+    <div class="ml-auto hidden lg:flex items-center space-x-4">
+      <div class="relative group">
+        <button class="flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+          <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-medium">
+            {{ getUserInitials() }}
+          </div>
+          <span class="text-sm font-medium text-gray-700">{{ currentUser?.fullName || 'User' }}</span>
+          <svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd"
+              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+              clip-rule="evenodd" />
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div
+          class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+          <a routerLink="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+            <svg class="inline-block w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+            </svg>
+            Thông tin cá nhân
+          </a>
+
+          <a *ngIf="currentUser?.role === 'Admin'" routerLink="/admin/users"
+            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+            <svg class="inline-block w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+            </svg>
+            Quản lý người dùng
+          </a>
+
+          <div class="border-t border-gray-100"></div>
+
+          <button (click)="onLogout()" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+            <svg class="inline-block w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
+                clip-rule="evenodd" />
+            </svg>
+            Đăng xuất
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div class="flex items-center ml-auto lg:hidden">
       <button (click)="toggleMenu()" class="cursor-pointer">
         <svg class="w-7 h-7" fill="#000" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
