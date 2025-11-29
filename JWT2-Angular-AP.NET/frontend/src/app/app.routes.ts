@@ -6,8 +6,6 @@ import { authGuard } from './guard/auth.guard';
 import { ProfileComponent } from './views/profile.component/profile.component';
 import { UserManagementComponent } from './views/admin/managements/user-management.component/user-management.component';
 import { adminGuard } from './guard/admin.guard';
-import { LoginComponent } from './views/admin/login.component/login.component';
-import { DashboardComponent } from './views/admin/dashboard.component/dashboard.component';
 
 export const routes: Routes = [
   {
@@ -28,37 +26,13 @@ export const routes: Routes = [
         component: ProfileComponent,
       },
       {
+        path: "admin/users",
+        component: UserManagementComponent,
+        canActivate: [adminGuard]
+      },
+      {
         path: '',
         redirectTo: '/home',
-        pathMatch: 'full',
-      },
-    ],
-  },
-  // đây trang đăng nhập của admin
-  {
-    path: 'admin/login',
-    component: LoginComponent,
-  },
-  {
-    path: 'admin',
-    component: MainComponent,
-    canActivate: [authGuard, adminGuard],
-    children: [
-      {
-        path: 'admin/dashboard',
-        component: DashboardComponent,
-      },
-      {
-        path: 'admin/profile',
-        component: ProfileComponent,
-      },
-      {
-        path: 'admin/users',
-        component: UserManagementComponent,
-      },
-      {
-        path: '',
-        redirectTo: '/dashboard',
         pathMatch: 'full',
       },
     ],
