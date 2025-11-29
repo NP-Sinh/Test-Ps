@@ -1,0 +1,239 @@
+<header class="flex border-b border-gray-300 bg-white min-h-[70px] tracking-wide relative z-50">
+  <div class="w-full flex flex-wrap items-center gap-6 sm:px-10 px-6 py-3 relative">
+    <a routerLink="/">
+      <img src="https://readymadeui.com/readymadeui.svg" alt="logo" class="w-[134px]" />
+    </a>
+
+    <div #collapseMenu [style.display]="isMenuOpen ? 'block' : null"
+      class="max-lg:hidden lg:!block max-lg:before:fixed max-lg:before:bg-black max-lg:before:opacity-40 max-lg:before:inset-0 max-lg:before:z-50">
+
+      <button (click)="closeMenu()"
+        class="lg:hidden fixed top-2 right-4 z-[100] rounded-full bg-white w-9 h-9 flex items-center justify-center border border-gray-200 cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 fill-black" viewBox="0 0 320.591 320.591">
+          <path
+            d="M30.391 318.583a30.37 30.37 0 0 1-21.56-7.288c-11.774-11.844-11.774-30.973 0-42.817L266.643 10.665c12.246-11.459 31.462-10.822 42.921 1.424 10.362 11.074 10.966 28.095 1.414 39.875L51.647 311.295a30.366 30.366 0 0 1-21.256 7.288z" />
+          <path
+            d="M287.9 318.583a30.37 30.37 0 0 1-21.257-8.806L8.83 51.963C-2.078 39.225-.595 20.055 12.143 9.146c11.369-9.736 28.136-9.736 39.504 0l259.331 257.813c12.243 11.462 12.876 30.679 1.414 42.922-.456.487-.927.958-1.414 1.414a30.368 30.368 0 0 1-23.078 7.288z" />
+        </svg>
+      </button>
+
+      <ul
+        class="lg:flex lg:ml-10 lg:gap-x-10 max-lg:space-y-3 max-lg:fixed max-lg:bg-white max-lg:w-2/3 max-lg:min-w-[300px] max-lg:top-0 max-lg:left-0 max-lg:p-4 max-lg:h-full max-lg:shadow-md max-lg:overflow-auto z-50">
+
+        <li class="max-lg:pb-4 px-3 lg:hidden">
+          <a routerLink="/">
+            <img src="https://readymadeui.com/readymadeui.svg" alt="logo" class="w-36" />
+          </a>
+        </li>
+
+        <li class="max-lg:px-3 max-lg:py-2">
+          <a routerLink="/" routerLinkActive="text-blue-700" [routerLinkActiveOptions]="{exact: true}"
+            (click)="closeMenu()"
+            class="max-lg:border-b max-lg:border-gray-300 max-lg:pb-3 hover:text-blue-700 font-medium text-[15px] block">
+            Home
+          </a>
+        </li>
+
+        <li class="group text-[14px] max-lg:px-3 max-lg:py-2 relative">
+          <a (click)="toggleAgencies()"
+            class="max-lg:border-b max-lg:border-gray-300 max-lg:pb-3 hover:text-blue-700 hover:fill-[#007bff] text-slate-900 font-medium text-[15px] block cursor-pointer">
+            Agencies
+            <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" class="ml-1 inline-block"
+              viewBox="0 0 24 24">
+              <path
+                d="M12 16a1 1 0 0 1-.71-.29l-6-6a1 1 0 0 1 1.42-1.42l5.29 5.3 5.29-5.29a1 1 0 0 1 1.41 1.41l-6 6a1 1 0 0 1-.7.29z"
+                data-name="16" />
+            </svg>
+          </a>
+
+          <div [ngClass]="{
+              'max-lg:max-h-[700px] max-lg:opacity-100': isAgenciesOpen,
+              'max-lg:max-h-0': !isAgenciesOpen
+            }"
+            class="absolute lg:top-5 max-lg:top-8 -left-6 z-50 flex shadow-lg bg-white max-h-0 overflow-hidden group-hover:opacity-100 group-hover:max-h-[700px] px-8 group-hover:pb-8 group-hover:pt-6 max-lg:transition-all max-lg:duration-500">
+
+            <div class="lg:min-w-[180px] max-lg:min-w-[140px]">
+              <ul class="mt-3 space-y-3">
+                <li class="py-1">
+                  <a routerLink="/agencies/new-york" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">New York</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/san-francisco" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">San Francisco</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/houston" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">Houston</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/dallas" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">Dallas</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/philadelphia" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">Philadelphia</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/san-diego" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">San Diego</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/atlanta" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">Atlanta</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/austin" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">Austin</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/portland" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">Portland</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/denver" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">Denver</a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="lg:min-w-[180px] max-lg:min-w-[140px]">
+              <ul class="mt-3 space-y-3">
+                <li class="py-1">
+                  <a routerLink="/agencies/london" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">London</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/bristol" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">Bristol</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/birmingham" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">Birmingham</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/liverpool" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">Liverpool</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/manchester" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">Manchester</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/glasgow" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">Glasgow</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/edinburgh" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">Edinburgh</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/leeds" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">Leeds</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/leicester" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">Leicester</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/sheffield" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">Sheffield</a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <ul class="mt-3 space-y-3">
+                <li class="py-1">
+                  <a routerLink="/agencies/toronto" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">Toronto</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/calgary" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">Calgary</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/ottawa" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">Ottawa</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/vancouver" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">Vancouver</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/montreal" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">Montréal</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/edmonton" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">Edmonton</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/winnipeg" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">Winnipeg</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/halifax" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">Halifax</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/victoria" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">Victoria</a>
+                </li>
+                <li class="py-1">
+                  <a routerLink="/agencies/windsor" routerLinkActive="text-blue-700" (click)="closeMenu()"
+                    class="hover:text-blue-700 text-slate-900 font-normal text-[15px] block">Windsor</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </li>
+
+        <li class="max-lg:px-3 max-lg:py-2">
+          <a routerLink="/team" routerLinkActive="text-blue-700" (click)="closeMenu()"
+            class="max-lg:border-b max-lg:border-gray-300 max-lg:pb-3 hover:text-blue-700 text-slate-900 font-medium text-[15px] block">
+            Team
+          </a>
+        </li>
+
+        <li class="max-lg:px-3 max-lg:py-2">
+          <a routerLink="/contact" routerLinkActive="text-blue-700" (click)="closeMenu()"
+            class="max-lg:border-b max-lg:border-gray-300 max-lg:pb-3 hover:text-blue-700 text-slate-900 font-medium text-[15px] block">
+            Contact
+          </a>
+        </li>
+
+        <li class="max-lg:px-3 max-lg:py-2">
+          <a routerLink="/source" routerLinkActive="text-blue-700" (click)="closeMenu()"
+            class="max-lg:border-b max-lg:border-gray-300 max-lg:pb-3 hover:text-blue-700 text-slate-900 font-medium text-[15px] block">
+            Feature
+          </a>
+        </li>
+
+        <li class="max-lg:px-3 max-lg:py-2">
+          <a routerLink="/partner" routerLinkActive="text-blue-700" (click)="closeMenu()"
+            class="max-lg:border-b max-lg:border-gray-300 max-lg:pb-3 hover:text-blue-700 text-slate-900 font-medium text-[15px] block">
+            Blog
+          </a>
+        </li>
+
+        <li class="max-lg:px-3 max-lg:py-2">
+          <a routerLink="/feature" routerLinkActive="text-blue-700" (click)="closeMenu()"
+            class="max-lg:border-b max-lg:border-gray-300 max-lg:pb-3 hover:text-blue-700 text-slate-900 font-medium text-[15px] block">
+            About
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="flex items-center ml-auto lg:hidden">
+      <button (click)="toggleMenu()" class="cursor-pointer">
+        <svg class="w-7 h-7" fill="#000" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd"
+            d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+            clip-rule="evenodd"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>
