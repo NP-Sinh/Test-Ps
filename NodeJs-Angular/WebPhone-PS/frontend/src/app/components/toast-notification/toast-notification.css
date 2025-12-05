@@ -1,0 +1,27 @@
+.toast {
+  transition: all 0.3s ease-in-out;
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.toast.hide {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.toast.text-bg-success .toast-body i {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.toast.text-bg-danger .toast-body i {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.toast.text-bg-warning .toast-body i {
+  color: rgba(255, 255, 255, 0.9);
+}

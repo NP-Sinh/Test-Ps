@@ -1,0 +1,98 @@
+<div class="container-fluid py-4">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="h3 mb-0">Quản lý Vai trò</h2>
+    <button class="btn btn-primary" (click)="addModal()">
+      <i class="bi bi-plus-circle me-2"></i>
+      Thêm vai trò
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <app-loading-overlay *ngIf="(state$ | async)?.loading"></app-loading-overlay>
+
+  <!-- Error State -->
+  <div *ngIf="(state$ | async)?.error" class="alert alert-danger" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    {{ (state$ | async)?.error }}
+  </div>
+
+  <!-- Data Table -->
+  <div *ngIf="(state$ | async)?.data">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th width="80">ID</th>
+              <th>Tên vai trò</th>
+              <th width="150">Trạng thái</th>
+              <th width="200" class="text-center">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of (state$ | async)?.data; trackBy: trackByVaiTro">
+              <td>{{ item.id }}</td>
+              <td>
+                <strong>{{ item.tenvaitro }}</strong>
+              </td>
+              <td>
+                <span [class]="getTrangThaiClass(item.trangthai)">
+                  {{ getTrangThaiText(item.trangthai) }}
+                </span>
+              </td>
+              <td>
+                <div class="btn-group btn-group-sm" role="group">
+                  <button type="button" class="btn btn-outline-primary"
+                    (click)="editModal(item.id)" title="Sửa">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+
+                  <!-- Nút Vô hiệu hóa (chỉ hiện khi đang hoạt động) -->
+                  <button *ngIf="item.trangthai" type="button" class="btn btn-outline-danger"
+                    (click)="deleteVaiTro(item.id)" title="Vô hiệu hóa">
+                    <i class="bi bi-trash"></i>
+                  </button>
+
+                  <!-- Nút Khôi phục (chỉ hiện khi không hoạt động) -->
+                  <button *ngIf="!item.trangthai" type="button" class="btn btn-outline-success"
+                    (click)="restoreVaiTro(item.id)" title="Khôi phục">
+                    <i class="bi bi-arrow-clockwise"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!(state$ | async)?.data?.length" class="text-center py-5">
+        <i class="bi bi-inbox display-1 text-muted"></i>
+        <h4 class="text-muted mt-3">Không có dữ liệu</h4>
+        <p class="text-muted">Chưa có vai trò nào được tạo.</p>
+        <button class="btn btn-primary" (click)="addModal()">
+          <i class="bi bi-plus-circle me-2"></i>
+          Thêm vai trò đầu tiên
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form Modal -->
+  <app-form-modal
+    [isOpen]="isModalOpen"
+    [title]="modalTitle"
+    [fields]="modalFields"
+    [formData]="formData"
+    [isSaving]="isSaving"
+    [errorMessage]="errorMessage"
+    [columns]="1"
+    modalSize="md"
+    (closeModal)="closeModal()"
+    (submitForm)="submitForm($event)">
+  </app-form-modal>
+
+  <!-- Toast Notification -->
+  <app-toast-notification></app-toast-notification>
+</div>

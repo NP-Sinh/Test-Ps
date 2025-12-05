@@ -1,0 +1,116 @@
+<div class="modal fade" [class.show]="isOpen" [style.display]="isOpen ? 'block' : 'none'" tabindex="-1" role="dialog"
+  [attr.aria-hidden]="!isOpen" (click)="onBackdropClick()">
+  <div class="modal-dialog {{ getModalSizeClass() }}" role="document" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+
+      <!-- Header -->
+      <div class="modal-header">
+        <h5 class="modal-title">{{ title }}</h5>
+        <button type="button" class="btn-close" (click)="onClose()" [disabled]="isSaving" aria-label="Close"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+        <form #form="ngForm">
+          <div class="row g-3">
+            <ng-container *ngFor="let field of fields">
+              <div *ngIf="!field.hidden" [ngClass]="getColClass(field)">
+                <label [for]="field.key" class="form-label">
+                  {{ field.label }}
+                  <span *ngIf="field.required" class="text-danger">*</span>
+                </label>
+
+                <!-- Text/Number/Email/Password Input -->
+                <input *ngIf="['text', 'number', 'email', 'password'].includes(field.type)" [type]="field.type"
+                  class="form-control" [id]="field.key" [name]="field.key" [(ngModel)]="formData[field.key]"
+                  [required]="field.required ?? false" [disabled]="field.disabled || isSaving"
+                  [placeholder]="field.placeholder || ''" />
+
+                <!-- Date Input (dd/MM/yyyy) -->
+                <input *ngIf="field.type === 'datetime'" type="text" class="form-control" [id]="field.key"
+                  [name]="field.key" [(ngModel)]="formData[field.key]" [required]="field.required ?? false"
+                  [disabled]="field.disabled || isSaving" [placeholder]="field.placeholder || 'dd/MM/yyyy'"
+                  maxlength="10" (input)="onDateInput($event, field.key)" (blur)="onDateBlur($event, field.key)" />
+
+                <!-- Textarea -->
+                <textarea *ngIf="field.type === 'textarea'" class="form-control" [id]="field.key" [name]="field.key"
+                  [(ngModel)]="formData[field.key]" [required]="field.required ?? false"
+                  [disabled]="field.disabled || isSaving" [placeholder]="field.placeholder || ''"
+                  [rows]="field.rows || 3">
+              </textarea>
+
+                <!-- File Input -->
+                <div *ngIf="field.type === 'file'">
+                  <input type="file" class="form-control" [id]="field.key" [name]="field.key"
+                    [accept]="field.accept || '*'" [multiple]="field.multiple || false"
+                    [required]="field.required ?? false" [disabled]="field.disabled || isSaving"
+                    (change)="onFileChange($event, field.key)" />
+
+                  <!-- File Preview -->
+                  <div *ngIf="hasPreview(field.key)" class="mt-3">
+                    <!-- Image Preview -->
+                    <div *ngIf="getPreview(field.key).type === 'image'" class="position-relative d-inline-block">
+                      <img [src]="getPreview(field.key).url" alt="Preview" class="img-thumbnail"
+                        style="max-width: 200px; max-height: 200px; object-fit: cover;">
+                      <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1"
+                        (click)="removeFile(field.key)" [disabled]="isSaving" title="Xóa file">
+                        <i class="bi bi-x-lg"></i>
+                      </button>
+                    </div>
+
+                    <!-- File Info (non-image) -->
+                    <div *ngIf="getPreview(field.key).type === 'file'"
+                      class="alert alert-info d-flex align-items-center justify-content-between mb-0">
+                      <div class="d-flex align-items-center">
+                        <i class="bi bi-file-earmark-text fs-4 me-3"></i>
+                        <div>
+                          <div class="fw-semibold">{{ getPreview(field.key).name }}</div>
+                          <small class="text-muted">{{ getPreview(field.key).size }}</small>
+                        </div>
+                      </div>
+                      <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeFile(field.key)"
+                        [disabled]="isSaving" title="Xóa file">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Select -->
+                <select *ngIf="field.type === 'select'" class="form-select" [id]="field.key" [name]="field.key"
+                  [(ngModel)]="formData[field.key]" [required]="field.required ?? false"
+                  [disabled]="field.disabled || isSaving">
+                  <option value="">-- Chọn {{ field.label }} --</option>
+                  <option *ngFor="let opt of field.options" [value]="opt.value">
+                    {{ opt.label }}
+                  </option>
+                </select>
+              </div>
+            </ng-container>
+          </div>
+
+          <!-- Error Message -->
+          <div *ngIf="errorMessage" class="alert alert-danger mt-3" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            {{ errorMessage }}
+          </div>
+        </form>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="onClose()" [disabled]="isSaving">
+          Hủy
+        </button>
+        <button type="button" class="btn btn-primary" (click)="onSubmit(form)" [disabled]="isSaving || form.invalid">
+          {{ submitButtonText }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Backdrop -->
+<div class="modal-backdrop fade" [class.show]="isOpen" *ngIf="isOpen" (click)="onBackdropClick()">
+</div>

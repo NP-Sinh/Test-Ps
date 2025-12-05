@@ -1,0 +1,25 @@
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999">
+  <div class="toast align-items-center border-0"
+       [class.text-bg-success]="type === 'success'"
+       [class.text-bg-danger]="type === 'error'"
+       [class.text-bg-warning]="type === 'warning'"
+       [class.show]="show"
+       [class.fade]="true"
+       [class.hide]="!show"
+       role="alert"
+       aria-live="assertive"
+       aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body d-flex align-items-center">
+        <!-- Icons for different types -->
+        <i *ngIf="type === 'success'" class="bi bi-check-circle-fill me-2"></i>
+        <i *ngIf="type === 'error'" class="bi bi-exclamation-circle-fill me-2"></i>
+        <i *ngIf="type === 'warning'" class="bi bi-exclamation-triangle-fill me-2"></i>
+        {{ message }}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto"
+              (click)="hide()" aria-label="Close">
+      </button>
+    </div>
+  </div>
+</div>
