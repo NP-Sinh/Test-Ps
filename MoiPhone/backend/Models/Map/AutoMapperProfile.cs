@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using backend.Models.Entities;
 
 namespace backend.Models.Map
 {
@@ -6,6 +7,9 @@ namespace backend.Models.Map
     {
         public AutoMapperProfile() 
         {
+            CreateMap<BrandMap, Brand>().ReverseMap();
+            CreateMap<UserMap, User>().ReverseMap();
+            CreateMap<RefreshTokenMap, RefreshToken>().ReverseMap();
 
         }
     }
