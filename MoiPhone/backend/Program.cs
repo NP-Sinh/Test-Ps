@@ -47,7 +47,8 @@ builder.Services.AddCors(options =>
         });
 });
 // Add services to the container.
-
+builder.Services.AddScoped<IAuthServices, AuthServices>();
+builder.Services.AddScoped<IJwtServices, JwtServices>();
 
 builder.Services.AddScoped<ITokenCleanupService, TokenCleanupService>();
 // Background service for token cleanup
