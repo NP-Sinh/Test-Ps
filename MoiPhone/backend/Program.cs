@@ -1,5 +1,6 @@
 using backend.Models.Entities;
 using backend.Models.Map;
+using backend.Services;
 using backend.Services.AuthServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -49,10 +50,14 @@ builder.Services.AddCors(options =>
 // Add services to the container.
 builder.Services.AddScoped<IAuthServices, AuthServices>();
 builder.Services.AddScoped<IJwtServices, JwtServices>();
+builder.Services.AddScoped<IUserServices, UserServices>();
+builder.Services.AddScoped<ICategoryServices, CategoryServices>();
+builder.Services.AddScoped<IBrandServices, BrandServices>();
 
-builder.Services.AddScoped<ITokenCleanupService, TokenCleanupService>();
+
 // Background service for token cleanup
 builder.Services.AddHostedService<TokenCleanupBackgroundService>();
+builder.Services.AddScoped<ITokenCleanupService, TokenCleanupService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
