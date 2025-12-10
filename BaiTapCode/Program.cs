@@ -1,11 +1,20 @@
 ﻿using BaiTapCode.CoBan;
 
 //KichThuocHinhVuong.chay();
-
 //KichThuocHinhChuNhat.chay();
 //KichThuocHinhTron.chay();
 //Console.WriteLine(KichThuocTamGiac.D1().ToString("0.00"));
 //KichThuocTamGiac.D2();
 //Console.WriteLine(DoFsangDoC.chay().ToString("0.0"));
 //Console.WriteLine(DoCsangDoF.chay().ToString("0.0"));
-Console.WriteLine(TinhLuyThua.chay());
+//Console.WriteLine(TinhLuyThua.Dang2());
+//Console.WriteLine(TongN.Dang1());
+//Console.WriteLine(SoLonNhatTrong3So.Dang2());
+//Console.WriteLine(SoLonNhatTrong4So.Dang2());
+//SoLonNhatTrong4So.TimMaxN();
+//ChiaKeo.Dang1();
+//chuSoDauVaCuoiCua2So.Dang1();
+//_2Dau2Cuoi.Dang1();
+//HamToanHoc.Dang1();
+//DiemTrungBinh.Dang1();
+ChuyenDoiThoiGian.Dang1();
