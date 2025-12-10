@@ -1,4 +1,5 @@
 ﻿using BaiTapCode.CoBan;
+using BaiTapCode.VongLap;
 
 //KichThuocHinhVuong.chay();
 //KichThuocHinhChuNhat.chay();
@@ -17,4 +18,12 @@
 //_2Dau2Cuoi.Dang1();
 //HamToanHoc.Dang1();
 //DiemTrungBinh.Dang1();
-ChuyenDoiThoiGian.Dang1();
+//ChuyenDoiThoiGian.Dang1();
+//Console.WriteLine(ChuSoHangTram.Dang1());
+//Console.WriteLine(SoNgauNhien.Dang1());
+//TongVaTich2SoNguyen.Dang1();
+//BangCuuChuong.DayDu();
+//BangCuuChuong.DangRutGon();
+//DaySoChan.Dang1();
+//DaySoChiaHet13.Dang1();
+//SoNguyenTo.Dang1();
