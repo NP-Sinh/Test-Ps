@@ -51,14 +51,6 @@ namespace CTDL_GT.Array
                     if (array[i] == array[j])
                     {
                         Console.WriteLine("Phần tử trùng lặp là: " + array[i]);
-
-
-
-
-
-
-
-
                     }
                 }
             }
