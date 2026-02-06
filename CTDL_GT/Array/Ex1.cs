@@ -6,7 +6,7 @@ namespace CTDL_GT.Array
 {
     internal class Ex1
     {
-        static int[] array = { 4, 90, 32, 432, 636, 6346, -1235, 90 };
+        static int[] array = { 4, 90, 33, 432, 636, 6343, -1235, 90 };
         public static void TimMaxArray()
         { 
             int max = array[0];
@@ -54,6 +54,25 @@ namespace CTDL_GT.Array
                     }
                 }
             }
+        }
+        public static void TinhTongVaTongChanLe()
+        {
+            int tong = 0;
+            int tongChan = 0;
+            int tongLe = 0;
+            for(int i = 0; i < array.Length; i++)
+            {
+                if (array[i] % 2 == 0)
+                {
+                    tongChan += array[i];
+                }    
+                else
+                {
+                    tongLe += array[i];
+                }
+                tong += array[i];
+            }
+            Console.WriteLine(tong + " " + tongChan + " " + tongLe);
         }
     }
 }
